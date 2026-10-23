@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PHP2Shell 점검</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<!--
+  PHP2Shell 점검 덱 (2026-10-23) · 강의 덱 키트 v0.2로 제작
+  블록 5개: ① 덱 뼈대 ② 발표자 노트 ③ 슬라이더 실험 ④ 골라야 열리는 결과 ⑤ 근거 표시
+
+  고쳐 쓰는 법
+  - 슬라이드: 「슬라이드 시작」과 「슬라이드 끝」 표시 사이. 블록이 없는 일반 장(section)은 자유롭게 추가·삭제해도 된다.
+  - 발표자 노트: 각 section의 data-note(멘트), data-time(예상 시간), data-sec(하단 제목).
+  - 슬라이더·선택·근거표 내용: 「KIT 시작」과 「KIT 끝」 표시 사이의 KIT 객체.
+  - 블록을 쓰는 자리: data-slider="이름", data-pick="이름", <table data-evidence="이름">.
+  - CSS와 맨 아래 엔진 코드는 고치지 않는다.
+
+  근거 태그 (KIT.evidence의 tag와 화면 라벨이 같다)
+  - me  = 직접 확인: 이번에 내가 직접 재거나 돌리거나 계산해 본 것
+  - ext = 출처 있음: 가리킬 문서·기사·발표·내 과거 기록이 있는 것 (이번에 다시 확인하지는 않음)
+  - unv = 미검증: 출처도 직접 확인도 없는 것, 가설
+-->
+<style>
+:root{
+  --bg:#eef2ec; --card:#fbfcf9; --ink:#1a231e; --sub:#56635b; --line:#d6ddd4;
+  --accent:#c2410c; --accent-bg:#fbe8dc; --good:#2f6b4f; --good-bg:#e1efe6;
+  --neutral:#f5f1e6; --warn:#9a6a0a; --warn-bg:#f8efd6;
+  --info:#2c5d8f; --info-bg:#e2ecf6;
+  --note:#fff8e6; --note-line:#e8d6a0;
+  --f-disp:"Black Han Sans","IBM Plex Sans KR",sans-serif;
+  --f-body:"IBM Plex Sans KR",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --f-mono:"IBM Plex Mono","SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121614; --card:#1a201c; --ink:#e8ede9; --sub:#9aa69e; --line:#2c3530;
+    --accent:#ff8a4c; --accent-bg:#3a2116; --good:#6fcf9c; --good-bg:#17301f;
+    --neutral:#24221b; --warn:#e8b45a; --warn-bg:#33290f;
+    --info:#8ab8e6; --info-bg:#172636;
+    --note:#25221a; --note-line:#4a4226; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121614; --card:#1a201c; --ink:#e8ede9; --sub:#9aa69e; --line:#2c3530;
+  --accent:#ff8a4c; --accent-bg:#3a2116; --good:#6fcf9c; --good-bg:#17301f;
+  --neutral:#24221b; --warn:#e8b45a; --warn-bg:#33290f;
+  --info:#8ab8e6; --info-bg:#172636;
+  --note:#25221a; --note-line:#4a4226; color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);line-height:1.6;overflow:hidden;-webkit-font-smoothing:antialiased}
+
+/* ① 덱 뼈대 */
+.deck{position:fixed;inset:0 0 56px 0;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+body.notes-on .deck{inset:0 0 34vh 0}
+.slide{display:none;width:min(1100px,100%);max-height:100%;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:40px 50px;position:relative}
+.slide.active{display:block;animation:in .25s ease}
+@keyframes in{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.slide.active{animation:none}}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.kick{font-size:13px;color:var(--sub);font-weight:500}
+.tag{font-family:var(--f-mono);font-size:12px;color:var(--accent);background:var(--accent-bg);padding:3px 10px;border-radius:99px;white-space:nowrap}
+h1{font-family:var(--f-disp);font-weight:400;font-size:50px;line-height:1.15;letter-spacing:-.01em;margin-bottom:16px;text-wrap:balance}
+h2{font-family:var(--f-disp);font-weight:400;font-size:34px;line-height:1.22;margin-bottom:20px;text-wrap:balance}
+h3{font-size:18px;margin-bottom:6px}
+p{font-size:17px} p.lead{font-size:20px;color:var(--sub);max-width:44em}
+.muted{color:var(--sub)} .accent{color:var(--accent)}
+.grid{display:grid;gap:14px} .grid>*{min-width:0}
+.g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)}
+.box{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--bg)}
+.box p{font-size:15.5px;color:var(--sub)}
+.b-accent{background:var(--accent-bg);border-color:transparent} .b-good{background:var(--good-bg);border-color:transparent}
+.b-warn{background:var(--warn-bg);border-color:transparent} .b-neutral{background:var(--neutral);border-color:transparent}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-weight:600}
+.mt{margin-top:18px} .mt2{margin-top:28px}
+kbd{font-family:var(--f-mono);font-size:13px;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;background:var(--card)}
+ul.clean{list-style:none;display:grid;gap:8px} ul.clean li{font-size:16px}
+code{font-family:var(--f-mono);font-size:.9em;background:var(--neutral);padding:1px 5px;border-radius:4px}
+
+/* ② 발표자 노트 */
+.notes{position:fixed;left:0;right:0;bottom:56px;height:calc(34vh - 56px);display:none;background:var(--note);border-top:1px solid var(--note-line);padding:16px 24px;overflow:auto}
+body.notes-on .notes{display:block}
+.notes .lbl{font-size:12px;font-weight:700;color:var(--warn);letter-spacing:.06em;margin-bottom:6px}
+.notes .txt{font-size:16px;max-width:1100px;white-space:pre-line}
+.notes .time{float:right;font-size:13px;color:var(--sub)}
+
+/* ③ 슬라이더 실험 */
+.lab{display:grid;grid-template-columns:1fr 1.1fr;gap:22px;align-items:start}
+.lab>*{min-width:0}
+.ctl{display:grid;gap:4px;margin-bottom:14px}
+.ctl label{font-size:14px;color:var(--sub);display:flex;justify-content:space-between;gap:8px}
+.ctl output{font-family:var(--f-mono);font-weight:600;color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--accent);min-height:28px}
+.meter{height:14px;border-radius:99px;background:var(--line);overflow:hidden;margin:6px 0 12px}
+.meter b{display:block;height:100%;background:var(--accent);transition:width .2s,background .2s}
+.meter.ok b{background:var(--good)}
+.headline{font-family:var(--f-disp);font-size:28px;line-height:1.2}
+.stat{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.stat>div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)}
+.stat small{display:block;font-size:12px;color:var(--sub)}
+.stat b{font-family:var(--f-mono);font-size:20px}
+
+/* ④ 골라야 열리는 결과 */
+.pick .q{font-weight:700;font-size:17px;margin:14px 0 8px}
+.pick .q:first-child{margin-top:0}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts button{font:inherit;font-size:15px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px 14px;cursor:pointer;min-height:44px}
+.opts button:hover{border-color:var(--accent)}
+.opts button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-bg);font-weight:700}
+.opts button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.out{margin-top:16px;border-radius:12px;padding:16px 18px;background:var(--neutral);border:1px dashed var(--line)}
+.out.right{background:var(--good-bg);border:1px solid transparent}
+.out.wrong{background:var(--accent-bg);border:1px solid transparent}
+.out h3{margin-bottom:4px}
+.out p{font-size:15.5px}
+.reveal{margin-top:12px}
+
+/* ⑤ 근거 표시 */
+.src{font-size:12.5px;color:var(--sub);margin-top:16px}
+.ev-tag{display:inline-block;font-family:var(--f-mono);font-size:11.5px;padding:1px 8px;border-radius:99px;margin-right:6px;vertical-align:1px;white-space:nowrap}
+.ev-me{background:var(--good-bg);color:var(--good)}
+.ev-ext{background:var(--info-bg);color:var(--info)}
+.ev-unv{background:var(--warn-bg);color:var(--warn)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12.5px;color:var(--sub);font-weight:500}
+td{font-size:14.5px}
+
+/* nav */
+.nav{position:fixed;left:0;right:0;bottom:0;height:calc(56px + env(safe-area-inset-bottom,0px));padding:0 16px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:10px;background:var(--card);border-top:1px solid var(--line)}
+.nav button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer;min-height:40px}
+.nav button:hover{border-color:var(--accent)}
+.nav button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.nav button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.nav .count{font-family:var(--f-mono);font-size:13.5px;color:var(--sub);min-width:56px;text-align:center}
+.nav .sec{font-size:13px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);transition:width .25s}
+.hint{font-size:12px;color:var(--sub)}
+@media (max-width:760px){
+  .deck{padding:12px 10px}
+  .slide{padding:22px 18px}
+  h1{font-size:32px} h2{font-size:25px} p.lead{font-size:17px} .headline{font-size:22px}
+  .g2,.g3,.lab{grid-template-columns:1fr}
+  .hint,.nav .sec{display:none}
+  .nav{gap:6px;padding-left:10px;padding-right:10px}
+  table{font-size:13px} td{font-size:13px} th,td{padding:6px 5px}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<!-- ===== 슬라이드 시작 ===== -->
+<main class="deck" id="deck">
+
+<!-- 1 표지 -->
+<section class="slide" data-sec="오프닝" data-time="30초" data-note="10월 21일 PHP가 원격 코드 실행으로 이어질 수 있는 취약점 2개를 고쳤습니다.
+오늘 질문은 하나입니다. 워드프레스는 최신인데, 그 밑에서 일하는 PHP는 확인했나요?
+끝나면 내 사이트에서 확인할 곳과 호스팅에 물을 질문을 들고 갑니다.">
+  <div class="top"><span class="kick">TECHTAEK · 2026-10-23</span><span class="tag">PHP2Shell</span></div>
+  <h1>워드프레스는 최신인데, PHP는 확인했나요?</h1>
+  <p class="lead">2026년 10월 21일 공개된 PHP 취약점 2개를 택배 창고 비유로 이해하고, 내 사이트에서 확인할 것과 AI에게 맡길 것을 나눈다.</p>
+</section>
+
+<!-- 2 오늘 가져갈 것 -->
+<section class="slide" data-sec="오늘 가져갈 것" data-time="30초" data-note="세 가지만 들고 가시면 됩니다. CVE 번호는 외우지 않아도 됩니다.">
+  <div class="top"><span class="kick">시작</span><span class="tag">15분 뒤</span></div>
+  <h2>15분 뒤, 내 사이트에서 할 일 세 가지가 남는다</h2>
+  <div class="grid g3">
+    <div class="box b-neutral"><h3>확인할 곳 1군데</h3><p>워드프레스 도구 → 사이트 건강 → 정보 → 서버의 PHP 버전</p></div>
+    <div class="box b-neutral"><h3>호스팅에 물을 질문 1개</h3><p>두 CVE 수정이 실행 중인 PHP 작업자까지 적용됐나요?</p></div>
+    <div class="box b-neutral"><h3>AI 점검 프롬프트 1개</h3><p>조사는 맡기고, 패치·판정은 내가 하는 읽기 전용 점검</p></div>
+  </div>
+</section>
+
+<!-- 3 블록④ 예상 후 공개 -->
+<section class="slide" data-sec="먼저 맞혀 보기" data-time="1분 30초" data-note="손을 들게 한 뒤 버튼을 누릅니다.
+'해킹당했다'를 고른 분이 많으면, 오늘 가장 중요한 구분이 바로 그거라고 짚습니다. OOM은 책상이 부족한 상태이고, 해킹은 다른 문제입니다.">
+  <div class="top"><span class="kick">질문</span><span class="tag">OOM ≠ 해킹</span></div>
+  <h2>서버 로그에 OOM이 찍혔다. 해킹당한 걸까?</h2>
+  <div class="pick" data-pick="guess"></div>
+  <p class="src"><span class="ev-tag ev-ext">출처 있음</span>PHP 공식 권고문 GHSA-w8hw-w9fx-j79w, GHSA-6wmf-4rv5-p3rp (2026-10-23 확인)</p>
+</section>
+
+<!-- 4 일반 장: 택배 창고 비유 -->
+<section class="slide" data-sec="택배 창고" data-time="1분 30초" data-note="비유는 끝까지 택배 창고 하나로 갑니다.
+워드프레스를 고쳤다고 PHP가 고쳐진 게 아닙니다. 주문 관리 화면을 고쳐도 창고 직원의 작업 절차는 그대로입니다.
+송장이 작아도 상자는 많이 생길 수 있습니다. 단, 그림 속 숫자는 예시이지 환산식이 아닙니다.">
+  <div class="top"><span class="kick">원리</span><span class="tag">비유</span></div>
+  <h2>PHP는 창고 직원, 메모리는 작업 책상이다</h2>
+  <div class="grid g3">
+    <div class="box"><h3>HTTP 요청 = 택배 송장</h3><p>송장이 작아도 항목마다 상자·분류표·위치 기록이 생길 수 있다. 받은 바이트 수와 PHP 내부 메모리 사용량은 다르다.</p></div>
+    <div class="box"><h3>PHP = 창고 직원</h3><p>요청을 읽고 데이터를 조회해 결과를 만든다. 로그인·이미지 업로드도 이 직원의 일이다.</p></div>
+    <div class="box"><h3>메모리 = 작업 책상</h3><p>처리 중에 자료를 펼쳐 놓는 자리. 일을 마치면 정리하고 다음 요청을 받는다.</p></div>
+  </div>
+  <div class="box b-warn mt"><p style="color:var(--ink)"><b>워드프레스 ≠ PHP:</b> 워드프레스는 직원에게 일을 시키는 앱이다. 워드프레스 업데이트와 PHP 업데이트는 따로 확인한다.</p></div>
+</section>
+
+<!-- 5 일반 장: 두 결함과 RCE·DoS -->
+<section class="slide" data-sec="두 결함" data-time="2분" data-note="문제는 책상이 부족한 게 아니라, 부족해진 뒤의 정리 과정입니다.
+두 결함은 별개이고, 반드시 연속 콤보로 써야 하는 것도 아닙니다.
+CVSS 9.2는 위험도 점수입니다. 사이트의 92%가 해킹됐다는 뜻이 아닙니다.">
+  <div class="top"><span class="kick">원인</span><span class="tag">CVSS v4 9.2 Critical</span></div>
+  <h2>위험한 건 책상 부족이 아니라, 부족해진 뒤의 정리다</h2>
+  <div class="grid g2">
+    <div class="box b-accent"><h3>CVE-2026-109618</h3><p style="color:var(--ink)">메모리 부족으로 실행 흐름을 빠져나갈 때, 덜 준비된 내부 상태를 정리 코드가 정상 데이터처럼 다룰 수 있었다.</p></div>
+    <div class="box b-accent"><h3>CVE-2026-109619</h3><p style="color:var(--ink)">반납한 메모리의 상태가 남아 같은 작업자의 다음 요청에서 다시 쓰일 수 있었다(해제 후 사용). 책상은 반납했는데 수첩에는 아직 내 자리로 적혀 있는 셈.</p></div>
+  </div>
+  <div class="tbl mt"><table>
+    <tr><th>구분</th><th>확인할 결과</th><th>창고 비유</th></tr>
+    <tr><td>DoS</td><td>서비스 이용이 방해되거나 멈췄나</td><td>접수·작업이 멈춤</td></tr>
+    <tr><td>RCE</td><td>공격자가 의도한 코드가 실행됐나</td><td>직원이 업무 밖 지시를 실행</td></tr>
+  </table></div>
+  <p class="src"><span class="ev-tag ev-ext">출처 있음</span>PHP 공식 권고문 2건. RCE는 추가 조건이 맞아야 하는 조건부 결과이며, 실행 권한은 PHP 웹 작업자 권한이다(root 아님).</p>
+</section>
+
+<!-- 6 일반 장: 수정 버전과 구버전 -->
+<section class="slide" data-sec="수정 버전" data-time="2분" data-note="표에 있는 계열이면 해당 버전 또는 업체 백포트를 확인합니다. 버전 숫자가 그대로여도 백포트됐을 수 있습니다.
+표에 7이나 5가 없는 건 안전해서가 아니라 공식 지원이 끝나서입니다. 반대로 옛날 버전이라 무조건 뚫린다고 단정하지도 않습니다. 둘 다 확인을 건너뛴 판단입니다.">
+  <div class="top"><span class="kick">해결</span><span class="tag">2026-10-23 기준</span></div>
+  <h2>해결은 PHP 패치, 확인은 실행 중인 작업자까지</h2>
+  <div class="grid g2">
+    <div class="tbl"><table>
+      <tr><th>사용 중인 계열</th><th>수정 포함 릴리스</th></tr>
+      <tr><td>8.5</td><td>8.5.12</td></tr>
+      <tr><td>8.4</td><td>8.4.27</td></tr>
+      <tr><td>8.3</td><td>8.3.36</td></tr>
+      <tr><td>8.2</td><td>8.2.35 (보안 지원 2026-12-31 종료)</td></tr>
+    </table></div>
+    <div>
+      <div class="box b-warn"><h3>7·5 계열은 목록에 없다</h3><p style="color:var(--ink)">“목록에 없으니 안전”도, “옛날 버전이니 무조건 뚫린다”도 아니다. 공식 지원이 끝난 것이다. 공급사 패치·연장 지원 근거를 확인하고 노출 축소·격리·이전을 준비한다.</p></div>
+      <div class="box mt"><h3>백포트</h3><p>업체가 기존 버전에 보안 수정만 넣었다면 버전 숫자는 그대로일 수 있다. 7.4·8.0·8.1용 최소 소스 백포트도 예외적으로 나왔지만, 내 서버에 자동 설치됐다는 뜻은 아니다.</p></div>
+    </div>
+  </div>
+  <p class="src"><span class="ev-tag ev-ext">출처 있음</span>php.net 보안 공지·지원 일정·지원 종료 목록 (2026-10-23 확인)</p>
+</section>
+
+<!-- 7 블록④ 자가진단 -->
+<section class="slide" data-sec="내 사이트 점검" data-time="1분 30초" data-note="각자 자기 사이트를 떠올리며 고르게 합니다. 대부분은 1번에서 막힙니다. 버전을 어디서 보는지부터 알려 주고 넘어갑니다.">
+  <div class="top"><span class="kick">진단</span><span class="tag">내 워드프레스</span></div>
+  <h2>내 사이트는 세 칸 중 어디까지 확인됐나?</h2>
+  <div class="pick" data-pick="check"></div>
+</section>
+
+<!-- 8 일반 장: 물고기 잡는 법 1 — 실제 점검 -->
+<section class="slide" data-sec="AI 점검 사례" data-time="1분 30초" data-note="제 두 사이트도 AI 에이전트에게 점검을 맡겼습니다. 초록 체크는 잔뜩 붙었는데, 정작 가장 궁금했던 PHP 버전은 '미확인'이었습니다.
+창고 관리를 맡겼지만 창고 열쇠는 안 준 셈이니, 미확인이 정직한 답이었습니다.
+이건 AI가 실행한 URL·API 조회입니다. 공격 재현이나 제가 손으로 한 서버 패치가 아닙니다.">
+  <div class="top"><span class="kick">물고기 잡는 법 ①</span><span class="tag">10월 22일 점검</span></div>
+  <h2>AI가 낸 가장 쓸모 있는 답은 “PHP 버전 미확인”이었다</h2>
+  <div class="grid g2">
+    <div class="box b-good"><h3>확인된 것</h3><p style="color:var(--ink)">두 사이트의 WordPress 7.1.3이 당시 공식 최신값과 일치. 비교 가능한 플러그인 최신. HTTPS 인증서 정상. 점검한 민감 경로 접근 차단.</p></div>
+    <div class="box b-warn"><h3>확인 못 한 것</h3><p style="color:var(--ink)">PHP 버전. 공개 응답에도, 사용한 인증 API에도 없었다. 상용 플러그인 최신 여부, 모든 취약점, 서버 파일 무결성도 검사 범위 밖.</p></div>
+  </div>
+  <div class="quote mt">초록 체크가 많은 것 ≠ 안전하다는 판정</div>
+  <p class="src"><span class="ev-tag ev-ext">출처 있음</span>2026-10-22 WordPress 보안 점검 보고서 (AI 에이전트가 실행한 URL·API 조회)</p>
+</section>
+
+<!-- 9 일반 장: 물고기 잡는 법 2 — 조사와 판정 나누기 -->
+<section class="slide" data-sec="조사와 판정" data-time="2분" data-note="물고기 잡는 법의 핵심은 이 한 장입니다. AI에게는 조사를 맡기고, 판정과 실행은 사람이 합니다.
+프롬프트에 하지 말 일을 먼저 적는 게 요령입니다. 계정 정보나 키는 본문에 붙여 넣지 않습니다.
+이 프롬프트는 조사 요청이고, 그 자체로 서버를 고치거나 안전을 보증하지 않습니다.">
+  <div class="top"><span class="kick">물고기 잡는 법 ②</span><span class="tag">조사 ≠ 판정</span></div>
+  <h2>AI에게 조사는 맡기고, 판정은 내가 한다</h2>
+  <div class="grid g2">
+    <div class="box"><h3>AI에게 맡길 것</h3><p>실제 요청을 처리하는 PHP 버전 찾기 · 두 CVE 수정·백포트 근거 대조 · 지원 종료와 이번 CVE 영향 분리 · 확인한 사실과 미확인 나누기 · 구버전 격리·이전 계획 초안</p></div>
+    <div class="box b-accent"><h3>내가 할 것</h3><p style="color:var(--ink)">점검 대상과 접근 범위 정하기 · 호스팅에 패치 적용 문의 · 백업 확인 후 패치 승인 · 정상 동작 확인 · 침해 징후가 있으면 호스팅 지원팀과 조사</p></div>
+  </div>
+  <div class="box b-neutral mt"><p style="color:var(--ink);font-size:14.5px">
+    <code>내가 관리하는 워드프레스의 PHP2Shell 대응 상태를 읽기 전용으로 점검해 줘.</code><br>
+    <code>실제 웹 요청을 처리하는 PHP 버전과 두 CVE의 수정·백포트 근거를 확인하고,</code><br>
+    <code>지원 종료 여부와 이번 CVE의 영향 여부를 분리해 확인해. 확인한 사실과 미확인을 나눠.</code><br>
+    <code>CLI 버전이나 HTTPS 성공만으로 안전하다고 판단하지 마.</code><br>
+    <code>악용 재현, 부하 유발, 설정 변경, 재시작, 패치는 실행하지 마.</code>
+  </p></div>
+  <p class="src">원문 프롬프트 7줄 중 5줄 발췌. 전체는 블로그 본문 「AI에게 맡길 건 조사부터」 섹션. 조사 요청일 뿐, 서버를 고치거나 안전을 보증하지 않는다.</p>
+</section>
+
+<!-- 10 블록⑤ 근거표 -->
+<section class="slide" data-sec="근거" data-time="1분" data-note="오늘 말한 것 중 어디까지가 공식 자료이고, 어디부터가 아직 모르는 것인지 나눕니다.
+특히 마지막 줄. 업체 공지가 있다고 제 서버까지 확인한 건 아닙니다.">
+  <div class="top"><span class="kick">근거</span><span class="tag">근거표</span></div>
+  <h2>공식 자료는 있고, 내 서버 패치는 아직 미확인이다</h2>
+  <div class="tbl"><table data-evidence="main"></table></div>
+  <p class="src">근거 수준: <span class="ev-tag ev-me">직접 확인</span>이번에 직접 잰 것 <span class="ev-tag ev-ext">출처 있음</span>문서·기사·과거 기록 <span class="ev-tag ev-unv">미검증</span>출처도 확인도 없는 것</p>
+</section>
+
+<!-- 11 정리 + 할 일 -->
+<section class="slide" data-sec="정리" data-time="1분" data-note="처음 질문으로 돌아갑니다. 워드프레스가 최신이어도 PHP는 따로 봐야 합니다.
+패치는 창고 매뉴얼을 고치는 일이고, 침해 조사는 그동안 없어진 물건이 없는지 재고를 세는 일입니다. 둘을 한 번에 끝났다고 체크하지 않습니다.
+투자·법률 조언처럼 이것도 보안 보증이 아닙니다. 내 서버는 내가 확인합니다.">
+  <div class="top"><span class="kick">정리</span><span class="tag">처음 질문의 답</span></div>
+  <h2>워드프레스 업데이트 표시만 보지 말고, 실행 중인 PHP까지 본다</h2>
+  <div class="grid g3">
+    <div class="box b-accent"><h3>OOM ≠ 해킹</h3><p style="color:var(--ink)">위험한 건 메모리 부족 뒤의 잘못된 정리다. RCE는 조건부다.</p></div>
+    <div class="box b-good"><h3>설치 ≠ 적용</h3><p style="color:var(--ink)">패키지 설치 후 실행 중인 PHP 작업자 반영까지 확인한다.</p></div>
+    <div class="box b-neutral"><h3>오늘 할 일</h3><p style="color:var(--ink)">사이트 건강에서 PHP 버전을 보고, 호스팅에 두 CVE 적용 여부를 묻는다.</p></div>
+  </div>
+  <p class="src">개념 설명과 점검 순서 안내용 자료입니다. 공격·패치 도구가 아니며 어떤 서버의 안전도 보증하지 않습니다. 기준일 2026-10-23 · CC BY-NC-ND 4.0 · 택택(TECHTAEK)</p>
+</section>
+
+</main>
+<!-- ===== 슬라이드 끝 ===== -->
+
+<aside class="notes" id="notes"><span class="time" id="ntime"></span><div class="lbl">강사 멘트</div><div class="txt" id="ntxt"></div></aside>
+<nav class="nav">
+  <button id="prev" aria-label="이전 장">←</button>
+  <span class="count" id="count"></span>
+  <button id="next" aria-label="다음 장">→</button>
+  <span class="sec" id="sec"></span>
+  <span class="hint">←/→ 이동 · N 강사 멘트 · T 테마</span>
+  <button id="noteBtn" aria-pressed="false">강사 멘트</button>
+  <button id="themeBtn" aria-label="테마 전환">◐</button>
+</nav>
+
+<script>
+/* ===== 여기만 고치면 된다 =====
+   sliders[이름]: inputs = [{id, label, min, max, step, value, unit}]
+                  calc(v) → {headline, text, meter:0~100, ok:true|false, stats:{이름:값}}
+   picks[이름]:   mode 'reveal' = 질문 1개, 보기마다 결과. answer = 정답 보기의 v. reveal = 고른 뒤 공통으로 열 문장
+                  mode 'diagnose' = 문항 여러 개, 보기마다 점수. verdicts = [{min, head, body}] 점수 높은 것부터
+   evidence[이름]: [{claim, tag, ref, limit}]  tag = 'me' 직접 확인 | 'ext' 출처 있음 | 'unv' 미검증 */
+/* ===== KIT 시작 ===== */
+var KIT = {
+  id: 'php2shell-deck',
+  sliders: {},
+  picks: {
+    guess: {
+      mode: 'reveal',
+      question: '먼저 골라야 답이 열린다.',
+      options: [
+        {v:'a', label:'해킹당했다', head:'단정할 수 없다', body:'OOM은 필요한 메모리를 더 할당하지 못한 상태다. 정상 작업의 자원 부족일 수도 있다. 해킹 여부는 별도 로그·파일 조사로 확인한다.'},
+        {v:'b', label:'이것만으로는 모른다', head:'맞다', body:'이번 취약점의 핵심은 메모리가 부족해진 뒤 잘못된 상태를 쓰는 처리다. RCE까지 가려면 추가 조건이 필요하다.'},
+        {v:'c', label:'메모리만 늘리면 끝', head:'임시 처방일 뿐', body:'임시 설정 변경이나 요청 제한은 패치를 대신하지 못한다. PHP 수정 버전이나 업체 백포트를 적용해야 한다.'}
+      ],
+      answer: 'b',
+      reveal: 'OOM은 책상 부족, 취약점은 책상이 부족해진 뒤의 잘못된 정리, RCE는 조건이 맞을 때 직원이 업무 밖 지시를 실행하는 것. 셋은 다른 단계다.'
+    },
+    check: {
+      mode: 'diagnose',
+      questions: [
+        {q:'1. 사이트 건강 → 정보 → 서버에서 PHP 전체 버전을 확인했다', options:[{label:'확인했다', score:2},{label:'어디서 보는지 몰랐다', score:0}]},
+        {q:'2. 두 CVE 수정 또는 백포트가 적용됐다는 근거를 받았다', options:[{label:'근거를 받았다', score:2},{label:'업체 공지만 봤다', score:1},{label:'아직 없다', score:0}]},
+        {q:'3. 실행 중인 PHP 작업자에 반영됐는지 확인했다', options:[{label:'확인했다', score:2},{label:'설치만 확인했다', score:1},{label:'모르겠다', score:0}]}
+      ],
+      verdicts: [
+        {min:6, head:'패치 확인 끝, 동작만 점검', body:'홈페이지, 관리자 로그인, 글 저장, 이미지 업로드, 세션·자동 발행처럼 실제로 쓰는 기능을 확인한다.'},
+        {min:3, head:'호스팅에 한 번 더 묻자', body:'두 CVE 수정이 내 서버의 실행 중인 PHP 작업자까지 적용됐는지 문의한다. 공지와 내 서버 적용은 다른 확인이다.'},
+        {min:0, head:'버전 확인부터', body:'사이트 건강에서 PHP 버전을 보고 수정 버전 표와 대조한다. 7·5 계열이면 공급사 패치 근거와 이전 계획을 확인한다.'}
+      ]
+    }
+  },
+  evidence: {
+    main: [
+      {claim:'두 취약점은 Critical, CVSS v4 9.2', tag:'ext', ref:'PHP 공식 권고문 2건 (2026-10-23 확인)', limit:'위험도 점수. 실제 피해 비율이 아님'},
+      {claim:'수정 릴리스 8.5.12 / 8.4.27 / 8.3.36 / 8.2.35', tag:'ext', ref:'php.net 보안 공지', limit:'업체 백포트는 버전 숫자가 다를 수 있음'},
+      {claim:'내 두 사이트 WordPress 7.1.3 최신, PHP 버전 미확인', tag:'ext', ref:'2026-10-22 AI 에이전트 점검 보고서', limit:'URL·API 조회. 공격 재현·서버 로그·무결성 검사 아님'},
+      {claim:'호스팅 업체가 모든 활성 서버 패치 완료를 공지', tag:'ext', ref:'호스팅 업체 공식 상태 페이지 공지 (2026-10-22)', limit:'일부 추가 지원 대상은 별도 연락한다고 함. 개별 서버 확인 아님'},
+      {claim:'내 서버에 두 CVE 수정이 실제 적용됐다', tag:'unv', ref:'업체 공지에 따른 기대', limit:'내 서버의 PHP 버전·패키지·작업자 반영을 확인하지 않음'}
+    ]
+  }
+};
+/* ===== KIT 끝 ===== */
+
+(function(){
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function q(el,sel){return el.querySelector(sel);}
+  function fmt(x){return (Math.round(x*100)/100).toString();}
+
+  /* ③ 슬라이더 실험 */
+  [].forEach.call(document.querySelectorAll('[data-slider]'),function(root){
+    var S=KIT.sliders[root.dataset.slider]; if(!S)return;
+    var box=q(root,'[data-slot="controls"]'), v={};
+    box.innerHTML=S.inputs.map(function(x){var id=root.dataset.slider+'-'+x.id;
+      return '<div class="ctl"><label for="'+id+'"><span>'+esc(x.label)+'</span><output id="'+id+'-o"></output></label>'+
+        '<input type="range" id="'+id+'" min="'+x.min+'" max="'+x.max+'" step="'+x.step+'" value="'+x.value+'"></div>';}).join('');
+    function upd(){
+      S.inputs.forEach(function(x){var el=document.getElementById(root.dataset.slider+'-'+x.id);v[x.id]=+el.value;
+        document.getElementById(root.dataset.slider+'-'+x.id+'-o').textContent=fmt(v[x.id])+x.unit;});
+      var r=S.calc(v), m=q(root,'[data-slot="meter"]');
+      if(m){m.firstElementChild.style.width=r.meter+'%';m.classList.toggle('ok',!!r.ok);}
+      q(root,'[data-slot="headline"]').textContent=r.headline;
+      q(root,'[data-slot="text"]').textContent=r.text||'';
+      q(root,'[data-slot="stats"]').innerHTML=Object.keys(r.stats||{}).map(function(k){return '<div><small>'+esc(k)+'</small><b>'+esc(r.stats[k])+'</b></div>';}).join('');
+    }
+    box.addEventListener('input',upd); upd();
+  });
+
+  /* ④ 골라야 열리는 결과 */
+  [].forEach.call(document.querySelectorAll('[data-pick]'),function(root){
+    var P=KIT.picks[root.dataset.pick]; if(!P)return;
+    function btns(opts,qi){return '<div class="opts" role="group">'+opts.map(function(o,j){
+      return '<button type="button" data-q="'+qi+'" data-j="'+j+'" aria-pressed="false">'+esc(o.label)+'</button>';}).join('')+'</div>';}
+    if(P.mode==='reveal'){
+      root.innerHTML='<p class="q">'+esc(P.question)+'</p>'+btns(P.options,0)+
+        '<div class="out" aria-live="polite"><h3>하나 골라야 결과가 열린다</h3><p class="muted">손들기로 먼저 정해 보자.</p></div>'+
+        '<div class="box b-neutral reveal" hidden><p style="color:var(--ink)">'+esc(P.reveal)+'</p></div>';
+    }else{
+      root.innerHTML=P.questions.map(function(x,i){return '<p class="q">'+esc(x.q)+'</p>'+btns(x.options,i);}).join('')+
+        '<div class="out" aria-live="polite"><h3>모두 고르면 판정이 나온다</h3><p class="muted">0 / '+P.questions.length+' 문항</p></div>';
+    }
+    var chosen={}, out=q(root,'.out');
+    root.addEventListener('click',function(e){
+      var b=e.target.closest('button[data-q]'); if(!b)return;
+      var qi=+b.dataset.q, j=+b.dataset.j;
+      [].forEach.call(b.parentNode.children,function(x){x.setAttribute('aria-pressed',String(x===b));});
+      chosen[qi]=j;
+      if(P.mode==='reveal'){
+        var o=P.options[j], right=o.v===P.answer;
+        out.className='out '+(right?'right':'wrong');
+        out.innerHTML='<h3>'+esc(o.head)+'</h3><p>'+esc(o.body)+'</p>';
+        q(root,'.reveal').hidden=false;
+      }else{
+        var n=Object.keys(chosen).length;
+        if(n<P.questions.length){out.innerHTML='<h3>모두 고르면 판정이 나온다</h3><p class="muted">'+n+' / '+P.questions.length+' 문항</p>';return;}
+        var s=0; Object.keys(chosen).forEach(function(k){s+=P.questions[k].options[chosen[k]].score;});
+        var vd=P.verdicts.filter(function(x){return s>=x.min;})[0];
+        out.className='out right';
+        out.innerHTML='<h3>'+esc(vd.head)+' <span class="num muted" style="font-size:14px">'+s+'점</span></h3><p>'+esc(vd.body)+'</p>';
+      }
+    });
+  });
+
+  /* ⑤ 근거표 */
+  var TAG={me:['ev-me','직접 확인'],ext:['ev-ext','출처 있음'],unv:['ev-unv','미검증']};
+  [].forEach.call(document.querySelectorAll('table[data-evidence]'),function(t){
+    var E=KIT.evidence[t.dataset.evidence]; if(!E)return;
+    t.innerHTML='<tr><th>주장</th><th>근거 수준</th><th>어디서</th><th>한계</th></tr>'+E.map(function(x){
+      return '<tr><td>'+esc(x.claim)+'</td><td><span class="ev-tag '+TAG[x.tag][0]+'">'+TAG[x.tag][1]+'</span></td><td>'+esc(x.ref)+'</td><td>'+esc(x.limit)+'</td></tr>';}).join('');
+  });
+
+  /* ① 덱 뼈대 + ② 발표자 노트 */
+  var slides=[].slice.call(document.querySelectorAll('.slide')),i=0,total=slides.length,KEY=KIT.id;
+  function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
+  var fh=parseInt((location.hash||'').replace('#',''),10);if(fh>=1&&fh<=total)i=fh-1;
+  function show(n){i=Math.max(0,Math.min(total-1,n));slides.forEach(function(s,k){s.classList.toggle('active',k===i);});var s=slides[i];
+    document.getElementById('count').textContent=(i+1)+' / '+total;document.getElementById('sec').textContent=s.dataset.sec||'';
+    document.getElementById('ntxt').textContent=s.dataset.note||'';document.getElementById('ntime').textContent=s.dataset.time?('예상 '+s.dataset.time):'';
+    document.getElementById('progress').style.width=((i+1)/total*100)+'%';try{history.replaceState(null,'','#'+(i+1));}catch(e){}}
+  function setNotes(on){document.body.classList.toggle('notes-on',on);document.getElementById('noteBtn').setAttribute('aria-pressed',String(on));store(KEY+'-notes',on?'1':'0');}
+  function toggleNotes(){setNotes(!document.body.classList.contains('notes-on'));}
+  function toggleTheme(){var r=document.documentElement,c=r.getAttribute('data-theme');var dk=c?c==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.setAttribute('data-theme',dk?'light':'dark');store(KEY+'-theme',r.getAttribute('data-theme'));}
+  if(store(KEY+'-notes')==='1')setNotes(true);var th=store(KEY+'-theme');if(th)document.documentElement.setAttribute('data-theme',th);
+  document.getElementById('prev').onclick=function(){show(i-1);};document.getElementById('next').onclick=function(){show(i+1);};
+  document.getElementById('noteBtn').onclick=toggleNotes;document.getElementById('themeBtn').onclick=toggleTheme;
+  document.addEventListener('keydown',function(e){var t=e.target&&e.target.tagName;if(t==='INPUT'||t==='TEXTAREA'||(t==='BUTTON'&&(e.key===' '||e.key==='Enter')))return;
+    if(e.metaKey||e.ctrlKey||e.altKey)return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(i+1);}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1);}
+    else if(e.key==='Home'){show(0);}else if(e.key==='End'){show(total-1);}else if(e.key==='n'||e.key==='N'){toggleNotes();}else if(e.key==='t'||e.key==='T'){toggleTheme();}});
+  var x0=null,deck=document.getElementById('deck');
+  deck.addEventListener('touchstart',function(e){x0=e.target.closest('input,button')?null:e.touches[0].clientX;},{passive:true});
+  deck.addEventListener('touchend',function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)show(i+(dx<0?1:-1));x0=null;});
+  show(i);
+})();
+</script>
+</body>
+</html>
