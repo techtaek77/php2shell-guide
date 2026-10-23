@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
 <title>PHP2Shell 점검</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&amp;family=IBM+Plex+Mono:wght@400;600&amp;family=IBM+Plex+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
 <!--
   PHP2Shell 점검 덱 (2026-10-23) · 강의 덱 키트 v0.2로 제작
   블록 5개: ① 덱 뼈대 ② 발표자 노트 ③ 슬라이더 실험 ④ 골라야 열리는 결과 ⑤ 근거 표시
@@ -156,177 +157,163 @@ td{font-size:14.5px}
 <div class="progress" id="progress"></div>
 <!-- ===== 슬라이드 시작 ===== -->
 <main class="deck" id="deck">
-
 <!-- 1 표지 -->
-<section class="slide" data-sec="오프닝" data-time="30초" data-note="10월 21일 PHP가 원격 코드 실행으로 이어질 수 있는 취약점 2개를 고쳤습니다.
+<section class="slide" data-note="10월 21일 PHP가 원격 코드 실행으로 이어질 수 있는 취약점 2개를 고쳤습니다.
 오늘 질문은 하나입니다. 워드프레스는 최신인데, 그 밑에서 일하는 PHP는 확인했나요?
-끝나면 내 사이트에서 확인할 곳과 호스팅에 물을 질문을 들고 갑니다.">
-  <div class="top"><span class="kick">TECHTAEK · 2026-10-23</span><span class="tag">PHP2Shell</span></div>
-  <h1>워드프레스는 최신인데, PHP는 확인했나요?</h1>
-  <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:center">
-    <p class="lead" style="flex:1 1 300px">2026년 10월 21일 공개된 PHP 취약점 2개를 택배 창고 비유로 이해하고, 내 사이트에서 확인할 것과 AI에게 맡길 것을 나눈다.</p>
-    <figure style="margin:0;text-align:center"><img src="data:image/webp;base64,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" width="175" height="158" alt="고양이 짤: PHP 서버가 요청 하나에 당황하는 장면" style="max-width:100%;height:auto;border-radius:10px"><figcaption class="muted" style="font-size:13px;margin-top:4px">PHP 서버: “평소엔 멀쩡한데?”</figcaption></figure>
-  </div>
+끝나면 내 사이트에서 확인할 곳과 호스팅에 물을 질문을 들고 갑니다." data-sec="오프닝" data-time="30초">
+<div class="top"><span class="kick">TECHTAEK · 2026-10-23</span><span class="tag">PHP2Shell</span></div>
+<h1>워드프레스는 최신인데, PHP는 확인했나요?</h1>
+<div style="display:flex;flex-wrap:wrap;gap:20px;align-items:center">
+<p class="lead" style="flex:1 1 300px">2026년 10월 21일 공개된 PHP 취약점 2개를 택배 창고 비유로 이해하고, 내 사이트에서 확인할 것과 AI에게 맡길 것을 나눈다.</p>
+<figure style="margin:0;text-align:center"><img alt="벨로키 짤: PHP 서버가 요청 하나에 당황하는 장면" data-character="veloki-a" height="175" src="assets/php-server-veloki-v1.webp" style="max-width:100%;height:auto;border-radius:10px" width="175"/><figcaption class="muted" style="font-size:13px;margin-top:4px">PHP 서버: “평소엔 멀쩡한데?”</figcaption></figure>
+</div>
 </section>
-
 <!-- 2 오늘 가져갈 것 -->
-<section class="slide" data-sec="오늘 가져갈 것" data-time="30초" data-note="세 가지만 들고 가시면 됩니다. CVE 번호는 외우지 않아도 됩니다.">
-  <div class="top"><span class="kick">시작</span><span class="tag">15분 뒤</span></div>
-  <h2>15분 뒤, 내 사이트에서 할 일 세 가지가 남는다</h2>
-  <div class="grid g3">
-    <div class="box b-neutral"><h3>확인할 곳 1군데</h3><p>워드프레스 도구 → 사이트 건강 → 정보 → 서버의 PHP 버전</p></div>
-    <div class="box b-neutral"><h3>호스팅에 물을 질문 1개</h3><p>두 CVE 수정이 실행 중인 PHP 작업자까지 적용됐나요?</p></div>
-    <div class="box b-neutral"><h3>AI 점검 프롬프트 1개</h3><p>조사는 맡기고, 패치·판정은 내가 하는 읽기 전용 점검</p></div>
-  </div>
+<section class="slide" data-note="세 가지만 들고 가시면 됩니다. CVE 번호는 외우지 않아도 됩니다." data-sec="오늘 가져갈 것" data-time="30초">
+<div class="top"><span class="kick">시작</span><span class="tag">15분 뒤</span></div>
+<h2>15분 뒤, 내 사이트에서 할 일 세 가지가 남는다</h2>
+<div class="grid g3">
+<div class="box b-neutral"><h3>확인할 곳 1군데</h3><p>워드프레스 도구 → 사이트 건강 → 정보 → 서버의 PHP 버전</p></div>
+<div class="box b-neutral"><h3>호스팅에 물을 질문 1개</h3><p>두 CVE 수정이 실행 중인 PHP 작업자까지 적용됐나요?</p></div>
+<div class="box b-neutral"><h3>AI 점검 프롬프트 1개</h3><p>조사는 맡기고, 패치·판정은 내가 하는 읽기 전용 점검</p></div>
+</div>
 </section>
-
 <!-- 3 블록④ 예상 후 공개 -->
-<section class="slide" data-sec="먼저 맞혀 보기" data-time="1분 30초" data-note="손을 들게 한 뒤 버튼을 누릅니다.
-'해킹당했다'를 고른 분이 많으면, 오늘 가장 중요한 구분이 바로 그거라고 짚습니다. OOM은 책상이 부족한 상태이고, 해킹은 다른 문제입니다.">
-  <div class="top"><span class="kick">질문</span><span class="tag">OOM ≠ 해킹</span></div>
-  <h2>서버 로그에 OOM이 찍혔다. 해킹당한 걸까?</h2>
-  <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
-    <div class="pick" data-pick="guess" style="flex:1 1 300px"></div>
-    <figure style="margin:0;text-align:center"><img src="data:image/webp;base64,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" width="172" height="125" alt="고양이 짤: 메모리가 자리가 없다며 퇴근하는 장면" style="max-width:100%;height:auto;border-radius:10px"><figcaption class="muted" style="font-size:13px;margin-top:4px">메모리: “저 이제 퇴근할게요.”</figcaption></figure>
-  </div>
-  <p class="src"><span class="ev-tag ev-ext">출처 있음</span>PHP 공식 권고문 GHSA-w8hw-w9fx-j79w, GHSA-6wmf-4rv5-p3rp (2026-10-23 확인)</p>
+<section class="slide" data-note="손을 들게 한 뒤 버튼을 누릅니다.
+'해킹당했다'를 고른 분이 많으면, 오늘 가장 중요한 구분이 바로 그거라고 짚습니다. OOM은 책상이 부족한 상태이고, 해킹은 다른 문제입니다." data-sec="먼저 맞혀 보기" data-time="1분 30초">
+<div class="top"><span class="kick">질문</span><span class="tag">OOM ≠ 해킹</span></div>
+<h2>서버 로그에 OOM이 찍혔다. 해킹당한 걸까?</h2>
+<div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+<div class="pick" data-pick="guess" style="flex:1 1 300px"></div>
+<figure style="margin:0;text-align:center"><img alt="벨로키 짤: 메모리가 자리가 없다며 퇴근하는 장면" data-character="veloki-a" height="172" src="assets/php-memory-veloki-v1.webp" style="max-width:100%;height:auto;border-radius:10px" width="172"/><figcaption class="muted" style="font-size:13px;margin-top:4px">메모리: “저 이제 퇴근할게요.”</figcaption></figure>
+</div>
+<p class="src"><span class="ev-tag ev-ext">출처 있음</span>PHP 공식 권고문 GHSA-w8hw-w9fx-j79w, GHSA-6wmf-4rv5-p3rp (2026-10-23 확인)</p>
 </section>
-
 <!-- 4 일반 장: 택배 창고 비유 -->
-<section class="slide" data-sec="택배 창고" data-time="1분 30초" data-note="비유는 끝까지 택배 창고 하나로 갑니다.
+<section class="slide" data-note="비유는 끝까지 택배 창고 하나로 갑니다.
 워드프레스를 고쳤다고 PHP가 고쳐진 게 아닙니다. 주문 관리 화면을 고쳐도 창고 직원의 작업 절차는 그대로입니다.
-송장이 작아도 상자는 많이 생길 수 있습니다. 단, 그림 속 숫자는 예시이지 환산식이 아닙니다.">
-  <div class="top"><span class="kick">원리</span><span class="tag">비유</span></div>
-  <h2>PHP는 창고 직원, 메모리는 작업 책상이다</h2>
-  <div class="grid g3">
-    <div class="box"><h3>HTTP 요청 = 택배 송장</h3><p>송장이 작아도 항목마다 상자·분류표·위치 기록이 생길 수 있다. 받은 바이트 수와 PHP 내부 메모리 사용량은 다르다.</p>
-      <div style="margin-top:10px"><figure style="margin:0;text-align:center"><img src="data:image/webp;base64,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" width="110" height="107" alt="고양이 짤: 파서가 작은 요청에서 상자가 많아져 당황하는 장면" style="max-width:100%;height:auto;border-radius:10px"><figcaption class="muted" style="font-size:13px;margin-top:4px">PHP 파서: “요청은 작다며?”</figcaption></figure></div></div>
-    <div class="box"><h3>PHP = 창고 직원</h3><p>요청을 읽고 데이터를 조회해 결과를 만든다. 로그인·이미지 업로드도 이 직원의 일이다.</p></div>
-    <div class="box"><h3>메모리 = 작업 책상</h3><p>처리 중에 자료를 펼쳐 놓는 자리. 일을 마치면 정리하고 다음 요청을 받는다.</p></div>
-  </div>
-  <div class="box b-warn mt"><p style="color:var(--ink)"><b>워드프레스 ≠ PHP:</b> 워드프레스는 직원에게 일을 시키는 앱이다. 워드프레스 업데이트와 PHP 업데이트는 따로 확인한다.</p></div>
+송장이 작아도 상자는 많이 생길 수 있습니다. 단, 그림 속 숫자는 예시이지 환산식이 아닙니다." data-sec="택배 창고" data-time="1분 30초">
+<div class="top"><span class="kick">원리</span><span class="tag">비유</span></div>
+<h2>PHP는 창고 직원, 메모리는 작업 책상이다</h2>
+<div class="grid g3">
+<div class="box"><h3>HTTP 요청 = 택배 송장</h3><p>송장이 작아도 항목마다 상자·분류표·위치 기록이 생길 수 있다. 받은 바이트 수와 PHP 내부 메모리 사용량은 다르다.</p>
+<div style="margin-top:10px"><figure style="margin:0;text-align:center"><img alt="벨로키 짤: 파서가 작은 요청에서 상자가 많아져 당황하는 장면" data-character="veloki-a" height="110" src="assets/php-parser-veloki-v1.webp" style="max-width:100%;height:auto;border-radius:10px" width="110"/><figcaption class="muted" style="font-size:13px;margin-top:4px">PHP 파서: “요청은 작다며?”</figcaption></figure></div></div>
+<div class="box"><h3>PHP = 창고 직원</h3><p>요청을 읽고 데이터를 조회해 결과를 만든다. 로그인·이미지 업로드도 이 직원의 일이다.</p></div>
+<div class="box"><h3>메모리 = 작업 책상</h3><p>처리 중에 자료를 펼쳐 놓는 자리. 일을 마치면 정리하고 다음 요청을 받는다.</p></div>
+</div>
+<div class="box b-warn mt"><p style="color:var(--ink)"><b>워드프레스 ≠ PHP:</b> 워드프레스는 직원에게 일을 시키는 앱이다. 워드프레스 업데이트와 PHP 업데이트는 따로 확인한다.</p></div>
 </section>
-
 <!-- 5 일반 장: 두 결함과 RCE·DoS -->
-<section class="slide" data-sec="두 결함" data-time="2분" data-note="문제는 책상이 부족한 게 아니라, 부족해진 뒤의 정리 과정입니다.
+<section class="slide" data-note="문제는 책상이 부족한 게 아니라, 부족해진 뒤의 정리 과정입니다.
 두 결함은 별개이고, 반드시 연속 콤보로 써야 하는 것도 아닙니다.
-CVSS 9.2는 위험도 점수입니다. 사이트의 92%가 해킹됐다는 뜻이 아닙니다.">
-  <div class="top"><span class="kick">원인</span><span class="tag">CVSS v4 9.2 Critical</span></div>
-  <h2>위험한 건 책상 부족이 아니라, 부족해진 뒤의 정리다</h2>
-  <div class="grid g2">
-    <div class="box b-accent"><h3>CVE-2026-109618</h3><p style="color:var(--ink)">메모리 부족으로 실행 흐름을 빠져나갈 때, 덜 준비된 내부 상태를 정리 코드가 정상 데이터처럼 다룰 수 있었다.</p></div>
-    <div class="box b-accent"><h3>CVE-2026-109619</h3><p style="color:var(--ink)">반납한 메모리의 상태가 남아 같은 작업자의 다음 요청에서 다시 쓰일 수 있었다(해제 후 사용). 책상은 반납했는데 수첩에는 아직 내 자리로 적혀 있는 셈.</p></div>
-  </div>
-  <div class="mt" style="display:flex;flex-wrap:wrap;gap:20px;align-items:center">
-    <div class="tbl" style="flex:1 1 300px"><table>
-      <tr><th>구분</th><th>확인할 결과</th><th>창고 비유</th></tr>
-      <tr><td>DoS</td><td>서비스 이용이 방해되거나 멈췄나</td><td>접수·작업이 멈춤</td></tr>
-      <tr><td>RCE</td><td>공격자가 의도한 코드가 실행됐나</td><td>직원이 업무 밖 지시를 실행</td></tr>
-    </table></div>
-    <figure style="margin:0;text-align:center"><img src="data:image/webp;base64,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" width="120" height="101" alt="고양이 짤: 공격자가 조건만 맞으면이라고 말하는 장면" style="max-width:100%;height:auto;border-radius:10px"><figcaption class="muted" style="font-size:13px;margin-top:4px">공격자: “조건만 맞으면…”</figcaption></figure>
-  </div>
-  <p class="src"><span class="ev-tag ev-ext">출처 있음</span>PHP 공식 권고문 2건. RCE는 추가 조건이 맞아야 하는 조건부 결과이며, 실행 권한은 PHP 웹 작업자 권한이다(root 아님).</p>
+CVSS 9.2는 위험도 점수입니다. 사이트의 92%가 해킹됐다는 뜻이 아닙니다." data-sec="두 결함" data-time="2분">
+<div class="top"><span class="kick">원인</span><span class="tag">CVSS v4 9.2 Critical</span></div>
+<h2>위험한 건 책상 부족이 아니라, 부족해진 뒤의 정리다</h2>
+<div class="grid g2">
+<div class="box b-accent"><h3>CVE-2026-109618</h3><p style="color:var(--ink)">메모리 부족으로 실행 흐름을 빠져나갈 때, 덜 준비된 내부 상태를 정리 코드가 정상 데이터처럼 다룰 수 있었다.</p></div>
+<div class="box b-accent"><h3>CVE-2026-109619</h3><p style="color:var(--ink)">반납한 메모리의 상태가 남아 같은 작업자의 다음 요청에서 다시 쓰일 수 있었다(해제 후 사용). 책상은 반납했는데 수첩에는 아직 내 자리로 적혀 있는 셈.</p></div>
+</div>
+<div class="mt" style="display:flex;flex-wrap:wrap;gap:20px;align-items:center">
+<div class="tbl" style="flex:1 1 300px"><table>
+<tr><th>구분</th><th>확인할 결과</th><th>창고 비유</th></tr>
+<tr><td>DoS</td><td>서비스 이용이 방해되거나 멈췄나</td><td>접수·작업이 멈춤</td></tr>
+<tr><td>RCE</td><td>공격자가 의도한 코드가 실행됐나</td><td>직원이 업무 밖 지시를 실행</td></tr>
+</table></div>
+<figure style="margin:0;text-align:center"><img alt="벨로키 짤: 공격자가 조건만 맞으면이라고 말하는 장면" data-character="veloki-a" height="120" src="assets/php-attacker-veloki-v1.webp" style="max-width:100%;height:auto;border-radius:10px" width="120"/><figcaption class="muted" style="font-size:13px;margin-top:4px">공격자: “조건만 맞으면…”</figcaption></figure>
+</div>
+<p class="src"><span class="ev-tag ev-ext">출처 있음</span>PHP 공식 권고문 2건. RCE는 추가 조건이 맞아야 하는 조건부 결과이며, 실행 권한은 PHP 웹 작업자 권한이다(root 아님).</p>
 </section>
-
 <!-- 6 일반 장: 수정 버전과 구버전 -->
-<section class="slide" data-sec="수정 버전" data-time="2분" data-note="표에 있는 계열이면 해당 버전 또는 업체 백포트를 확인합니다. 버전 숫자가 그대로여도 백포트됐을 수 있습니다.
-표에 7이나 5가 없는 건 안전해서가 아니라 공식 지원이 끝나서입니다. 반대로 옛날 버전이라 무조건 뚫린다고 단정하지도 않습니다. 둘 다 확인을 건너뛴 판단입니다.">
-  <div class="top"><span class="kick">해결</span><span class="tag">2026-10-23 기준</span></div>
-  <h2>해결은 PHP 패치, 확인은 실행 중인 작업자까지</h2>
-  <div class="grid g2">
-    <div class="tbl"><table>
-      <tr><th>사용 중인 계열</th><th>수정 포함 릴리스</th></tr>
-      <tr><td>8.5</td><td>8.5.12</td></tr>
-      <tr><td>8.4</td><td>8.4.27</td></tr>
-      <tr><td>8.3</td><td>8.3.36</td></tr>
-      <tr><td>8.2</td><td>8.2.35 (보안 지원 2026-12-31 종료)</td></tr>
-    </table></div>
-    <div>
-      <div class="box b-warn"><h3>7·5 계열은 목록에 없다</h3><p style="color:var(--ink)">“목록에 없으니 안전”도, “옛날 버전이니 무조건 뚫린다”도 아니다. 공식 지원이 끝난 것이다. 공급사 패치·연장 지원 근거를 확인하고 노출 축소·격리·이전을 준비한다.</p></div>
-      <div class="box mt"><h3>백포트</h3><p>업체가 기존 버전에 보안 수정만 넣었다면 버전 숫자는 그대로일 수 있다. 7.4·8.0·8.1용 최소 소스 백포트도 예외적으로 나왔지만, 내 서버에 자동 설치됐다는 뜻은 아니다.</p></div>
-    </div>
-  </div>
-  <p class="src"><span class="ev-tag ev-ext">출처 있음</span>php.net 보안 공지·지원 일정·지원 종료 목록 (2026-10-23 확인)</p>
+<section class="slide" data-note="표에 있는 계열이면 해당 버전 또는 업체 백포트를 확인합니다. 버전 숫자가 그대로여도 백포트됐을 수 있습니다.
+표에 7이나 5가 없는 건 안전해서가 아니라 공식 지원이 끝나서입니다. 반대로 옛날 버전이라 무조건 뚫린다고 단정하지도 않습니다. 둘 다 확인을 건너뛴 판단입니다." data-sec="수정 버전" data-time="2분">
+<div class="top"><span class="kick">해결</span><span class="tag">2026-10-23 기준</span></div>
+<h2>해결은 PHP 패치, 확인은 실행 중인 작업자까지</h2>
+<div class="grid g2">
+<div class="tbl"><table>
+<tr><th>사용 중인 계열</th><th>수정 포함 릴리스</th></tr>
+<tr><td>8.5</td><td>8.5.12</td></tr>
+<tr><td>8.4</td><td>8.4.27</td></tr>
+<tr><td>8.3</td><td>8.3.36</td></tr>
+<tr><td>8.2</td><td>8.2.35 (보안 지원 2026-12-31 종료)</td></tr>
+</table></div>
+<div>
+<div class="box b-warn"><h3>7·5 계열은 목록에 없다</h3><p style="color:var(--ink)">“목록에 없으니 안전”도, “옛날 버전이니 무조건 뚫린다”도 아니다. 공식 지원이 끝난 것이다. 공급사 패치·연장 지원 근거를 확인하고 노출 축소·격리·이전을 준비한다.</p></div>
+<div class="box mt"><h3>백포트</h3><p>업체가 기존 버전에 보안 수정만 넣었다면 버전 숫자는 그대로일 수 있다. 7.4·8.0·8.1용 최소 소스 백포트도 예외적으로 나왔지만, 내 서버에 자동 설치됐다는 뜻은 아니다.</p></div>
+</div>
+</div>
+<p class="src"><span class="ev-tag ev-ext">출처 있음</span>php.net 보안 공지·지원 일정·지원 종료 목록 (2026-10-23 확인)</p>
 </section>
-
 <!-- 7 블록④ 자가진단 -->
-<section class="slide" data-sec="내 사이트 점검" data-time="1분 30초" data-note="각자 자기 사이트를 떠올리며 고르게 합니다. 대부분은 1번에서 막힙니다. 버전을 어디서 보는지부터 알려 주고 넘어갑니다.">
-  <div class="top"><span class="kick">진단</span><span class="tag">내 워드프레스</span></div>
-  <h2>내 사이트는 세 칸 중 어디까지 확인됐나?</h2>
-  <div class="pick" data-pick="check"></div>
+<section class="slide" data-note="각자 자기 사이트를 떠올리며 고르게 합니다. 대부분은 1번에서 막힙니다. 버전을 어디서 보는지부터 알려 주고 넘어갑니다." data-sec="내 사이트 점검" data-time="1분 30초">
+<div class="top"><span class="kick">진단</span><span class="tag">내 워드프레스</span></div>
+<h2>내 사이트는 세 칸 중 어디까지 확인됐나?</h2>
+<div class="pick" data-pick="check"></div>
 </section>
-
 <!-- 8 일반 장: 물고기 잡는 법 1 — 실제 점검 -->
-<section class="slide" data-sec="AI 점검 사례" data-time="1분 30초" data-note="제 두 사이트도 AI 에이전트에게 점검을 맡겼습니다. 초록 체크는 잔뜩 붙었는데, 정작 가장 궁금했던 PHP 버전은 '미확인'이었습니다.
+<section class="slide" data-note="제 두 사이트도 AI 에이전트에게 점검을 맡겼습니다. 초록 체크는 잔뜩 붙었는데, 정작 가장 궁금했던 PHP 버전은 '미확인'이었습니다.
 창고 관리를 맡겼지만 창고 열쇠는 안 준 셈이니, 미확인이 정직한 답이었습니다.
-이건 AI가 실행한 URL·API 조회입니다. 공격 재현이나 제가 손으로 한 서버 패치가 아닙니다.">
-  <div class="top"><span class="kick">물고기 잡는 법 ①</span><span class="tag">10월 22일 점검</span></div>
-  <h2>AI가 낸 가장 쓸모 있는 답은 “PHP 버전 미확인”이었다</h2>
-  <div class="grid g2">
-    <div class="box b-good"><h3>확인된 것</h3><p style="color:var(--ink)">두 사이트의 WordPress 7.1.3이 당시 공식 최신값과 일치. 비교 가능한 플러그인 최신. HTTPS 인증서 정상. 점검한 민감 경로 접근 차단.</p></div>
-    <div class="box b-warn"><h3>확인 못 한 것</h3><p style="color:var(--ink)">PHP 버전. 공개 응답에도, 사용한 인증 API에도 없었다. 상용 플러그인 최신 여부, 모든 취약점, 서버 파일 무결성도 검사 범위 밖.</p></div>
-  </div>
-  <div class="quote mt">초록 체크가 많은 것 ≠ 안전하다는 판정</div>
-  <p class="src"><span class="ev-tag ev-ext">출처 있음</span>2026-10-22 WordPress 보안 점검 보고서 (AI 에이전트가 실행한 URL·API 조회)</p>
+이건 AI가 실행한 URL·API 조회입니다. 공격 재현이나 제가 손으로 한 서버 패치가 아닙니다." data-sec="AI 점검 사례" data-time="1분 30초">
+<div class="top"><span class="kick">물고기 잡는 법 ①</span><span class="tag">10월 22일 점검</span></div>
+<h2>AI가 낸 가장 쓸모 있는 답은 “PHP 버전 미확인”이었다</h2>
+<div class="grid g2">
+<div class="box b-good"><h3>확인된 것</h3><p style="color:var(--ink)">두 사이트의 WordPress 7.1.3이 당시 공식 최신값과 일치. 비교 가능한 플러그인 최신. HTTPS 인증서 정상. 점검한 민감 경로 접근 차단.</p></div>
+<div class="box b-warn"><h3>확인 못 한 것</h3><p style="color:var(--ink)">PHP 버전. 공개 응답에도, 사용한 인증 API에도 없었다. 상용 플러그인 최신 여부, 모든 취약점, 서버 파일 무결성도 검사 범위 밖.</p></div>
+</div>
+<div class="quote mt">초록 체크가 많은 것 ≠ 안전하다는 판정</div>
+<p class="src"><span class="ev-tag ev-ext">출처 있음</span>2026-10-22 WordPress 보안 점검 보고서 (AI 에이전트가 실행한 URL·API 조회)</p>
 </section>
-
 <!-- 9 일반 장: 물고기 잡는 법 2 — 조사와 판정 나누기 -->
-<section class="slide" data-sec="조사와 판정" data-time="2분" data-note="물고기 잡는 법의 핵심은 이 한 장입니다. AI에게는 조사를 맡기고, 판정과 실행은 사람이 합니다.
+<section class="slide" data-note="물고기 잡는 법의 핵심은 이 한 장입니다. AI에게는 조사를 맡기고, 판정과 실행은 사람이 합니다.
 프롬프트에 하지 말 일을 먼저 적는 게 요령입니다. 계정 정보나 키는 본문에 붙여 넣지 않습니다.
-이 프롬프트는 조사 요청이고, 그 자체로 서버를 고치거나 안전을 보증하지 않습니다.">
-  <div class="top"><span class="kick">물고기 잡는 법 ②</span><span class="tag">조사 ≠ 판정</span></div>
-  <h2>AI에게 조사는 맡기고, 판정은 내가 한다</h2>
-  <div class="grid g2">
-    <div class="box"><h3>AI에게 맡길 것</h3><p>실제 요청을 처리하는 PHP 버전 찾기 · 두 CVE 수정·백포트 근거 대조 · 지원 종료와 이번 CVE 영향 분리 · 확인한 사실과 미확인 나누기 · 구버전 격리·이전 계획 초안</p></div>
-    <div class="box b-accent"><h3>내가 할 것</h3><p style="color:var(--ink)">점검 대상과 접근 범위 정하기 · 호스팅에 패치 적용 문의 · 백업 확인 후 패치 승인 · 정상 동작 확인 · 침해 징후가 있으면 호스팅 지원팀과 조사</p></div>
-  </div>
-  <div class="box b-neutral mt"><p style="color:var(--ink);font-size:14.5px">
-    <code>내가 관리하는 워드프레스의 PHP2Shell 대응 상태를 읽기 전용으로 점검해 줘.</code><br>
-    <code>실제 웹 요청을 처리하는 PHP 버전과 두 CVE의 수정·백포트 근거를 확인하고,</code><br>
-    <code>지원 종료 여부와 이번 CVE의 영향 여부를 분리해 확인해. 확인한 사실과 미확인을 나눠.</code><br>
-    <code>CLI 버전이나 HTTPS 성공만으로 안전하다고 판단하지 마.</code><br>
-    <code>악용 재현, 부하 유발, 설정 변경, 재시작, 패치는 실행하지 마.</code>
-  </p></div>
-  <p class="src">원문 프롬프트 7줄 중 5줄 발췌. 전체는 블로그 본문 「AI에게 맡길 건 조사부터」 섹션. 조사 요청일 뿐, 서버를 고치거나 안전을 보증하지 않는다.</p>
+이 프롬프트는 조사 요청이고, 그 자체로 서버를 고치거나 안전을 보증하지 않습니다." data-sec="조사와 판정" data-time="2분">
+<div class="top"><span class="kick">물고기 잡는 법 ②</span><span class="tag">조사 ≠ 판정</span></div>
+<h2>AI에게 조사는 맡기고, 판정은 내가 한다</h2>
+<div class="grid g2">
+<div class="box"><h3>AI에게 맡길 것</h3><p>실제 요청을 처리하는 PHP 버전 찾기 · 두 CVE 수정·백포트 근거 대조 · 지원 종료와 이번 CVE 영향 분리 · 확인한 사실과 미확인 나누기 · 구버전 격리·이전 계획 초안</p></div>
+<div class="box b-accent"><h3>내가 할 것</h3><p style="color:var(--ink)">점검 대상과 접근 범위 정하기 · 호스팅에 패치 적용 문의 · 백업 확인 후 패치 승인 · 정상 동작 확인 · 침해 징후가 있으면 호스팅 지원팀과 조사</p></div>
+</div>
+<div class="box b-neutral mt"><p style="color:var(--ink);font-size:14.5px">
+<code>내가 관리하는 워드프레스의 PHP2Shell 대응 상태를 읽기 전용으로 점검해 줘.</code><br/>
+<code>실제 웹 요청을 처리하는 PHP 버전과 두 CVE의 수정·백포트 근거를 확인하고,</code><br/>
+<code>지원 종료 여부와 이번 CVE의 영향 여부를 분리해 확인해. 확인한 사실과 미확인을 나눠.</code><br/>
+<code>CLI 버전이나 HTTPS 성공만으로 안전하다고 판단하지 마.</code><br/>
+<code>악용 재현, 부하 유발, 설정 변경, 재시작, 패치는 실행하지 마.</code>
+</p></div>
+<p class="src">원문 프롬프트 7줄 중 5줄 발췌. 전체는 블로그 본문 「AI에게 맡길 건 조사부터」 섹션. 조사 요청일 뿐, 서버를 고치거나 안전을 보증하지 않는다.</p>
 </section>
-
 <!-- 10 블록⑤ 근거표 -->
-<section class="slide" data-sec="근거" data-time="1분" data-note="오늘 말한 것 중 어디까지가 공식 자료이고, 어디부터가 아직 모르는 것인지 나눕니다.
-특히 마지막 줄. 업체 공지가 있다고 제 서버까지 확인한 건 아닙니다.">
-  <div class="top"><span class="kick">근거</span><span class="tag">근거표</span></div>
-  <h2>공식 자료는 있고, 내 서버 패치는 아직 미확인이다</h2>
-  <div class="tbl"><table data-evidence="main"></table></div>
-  <p class="src">근거 수준: <span class="ev-tag ev-me">직접 확인</span>이번에 직접 잰 것 <span class="ev-tag ev-ext">출처 있음</span>문서·기사·과거 기록 <span class="ev-tag ev-unv">미검증</span>출처도 확인도 없는 것</p>
+<section class="slide" data-note="오늘 말한 것 중 어디까지가 공식 자료이고, 어디부터가 아직 모르는 것인지 나눕니다.
+특히 마지막 줄. 업체 공지가 있다고 제 서버까지 확인한 건 아닙니다." data-sec="근거" data-time="1분">
+<div class="top"><span class="kick">근거</span><span class="tag">근거표</span></div>
+<h2>공식 자료는 있고, 내 서버 패치는 아직 미확인이다</h2>
+<div class="tbl"><table data-evidence="main"></table></div>
+<p class="src">근거 수준: <span class="ev-tag ev-me">직접 확인</span>이번에 직접 잰 것 <span class="ev-tag ev-ext">출처 있음</span>문서·기사·과거 기록 <span class="ev-tag ev-unv">미검증</span>출처도 확인도 없는 것</p>
 </section>
-
 <!-- 11 정리 + 할 일 -->
-<section class="slide" data-sec="정리" data-time="1분" data-note="처음 질문으로 돌아갑니다. 워드프레스가 최신이어도 PHP는 따로 봐야 합니다.
+<section class="slide" data-note="처음 질문으로 돌아갑니다. 워드프레스가 최신이어도 PHP는 따로 봐야 합니다.
 패치는 창고 매뉴얼을 고치는 일이고, 침해 조사는 그동안 없어진 물건이 없는지 재고를 세는 일입니다. 둘을 한 번에 끝났다고 체크하지 않습니다.
-투자·법률 조언처럼 이것도 보안 보증이 아닙니다. 내 서버는 내가 확인합니다.">
-  <div class="top"><span class="kick">정리</span><span class="tag">처음 질문의 답</span></div>
-  <h2>워드프레스 업데이트 표시만 보지 말고, 실행 중인 PHP까지 본다</h2>
-  <div class="grid g3">
-    <div class="box b-accent"><h3>OOM ≠ 해킹</h3><p style="color:var(--ink)">위험한 건 메모리 부족 뒤의 잘못된 정리다. RCE는 조건부다.</p></div>
-    <div class="box b-good"><h3>설치 ≠ 적용</h3><p style="color:var(--ink)">패키지 설치 후 실행 중인 PHP 작업자 반영까지 확인한다.</p></div>
-    <div class="box b-neutral"><h3>오늘 할 일</h3><p style="color:var(--ink)">사이트 건강에서 PHP 버전을 보고, 호스팅에 두 CVE 적용 여부를 묻는다.</p></div>
-  </div>
-  <p class="src">개념 설명과 점검 순서 안내용 자료입니다. 공격·패치 도구가 아니며 어떤 서버의 안전도 보증하지 않습니다. 고양이 그림은 AI로 만든 개념 설명용 이미지입니다. 기준일 2026-10-23 · CC BY-NC-ND 4.0 · 택택(TECHTAEK)</p>
+투자·법률 조언처럼 이것도 보안 보증이 아닙니다. 내 서버는 내가 확인합니다." data-sec="정리" data-time="1분">
+<div class="top"><span class="kick">정리</span><span class="tag">처음 질문의 답</span></div>
+<h2>워드프레스 업데이트 표시만 보지 말고, 실행 중인 PHP까지 본다</h2>
+<div class="grid g3">
+<div class="box b-accent"><h3>OOM ≠ 해킹</h3><p style="color:var(--ink)">위험한 건 메모리 부족 뒤의 잘못된 정리다. RCE는 조건부다.</p></div>
+<div class="box b-good"><h3>설치 ≠ 적용</h3><p style="color:var(--ink)">패키지 설치 후 실행 중인 PHP 작업자 반영까지 확인한다.</p></div>
+<div class="box b-neutral"><h3>오늘 할 일</h3><p style="color:var(--ink)">사이트 건강에서 PHP 버전을 보고, 호스팅에 두 CVE 적용 여부를 묻는다.</p></div>
+</div>
+<p class="src">개념 설명과 점검 순서 안내용 자료입니다. 공격·패치 도구가 아니며 어떤 서버의 안전도 보증하지 않습니다. 벨로키 그림은 AI로 만든 개념 설명용 이미지입니다. 기준일 2026-10-23 · CC BY-NC-ND 4.0 · 택택(TECHTAEK)</p>
 </section>
-
 </main>
 <!-- ===== 슬라이드 끝 ===== -->
-
 <aside class="notes" id="notes"><span class="time" id="ntime"></span><div class="lbl">강사 멘트</div><div class="txt" id="ntxt"></div></aside>
 <nav class="nav">
-  <button id="prev" aria-label="이전 장">←</button>
-  <span class="count" id="count"></span>
-  <button id="next" aria-label="다음 장">→</button>
-  <span class="sec" id="sec"></span>
-  <span class="hint">←/→ 이동 · N 강사 멘트 · T 테마</span>
-  <button id="noteBtn" aria-pressed="false">강사 멘트</button>
-  <button id="themeBtn" aria-label="테마 전환">◐</button>
+<button aria-label="이전 장" id="prev">←</button>
+<span class="count" id="count"></span>
+<button aria-label="다음 장" id="next">→</button>
+<span class="sec" id="sec"></span>
+<span class="hint">←/→ 이동 · N 강사 멘트 · T 테마</span>
+<button aria-pressed="false" id="noteBtn">강사 멘트</button>
+<button aria-label="테마 전환" id="themeBtn">◐</button>
 </nav>
-
 <script>
 /* ===== 여기만 고치면 된다 =====
    sliders[이름]: inputs = [{id, label, min, max, step, value, unit}]
